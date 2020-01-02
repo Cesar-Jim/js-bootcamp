@@ -1,6 +1,6 @@
 // ************************************************************ GRADE CALCULATOR CHALLENGE
-let gradeCalculator = function(score, maxScore) {
-  let percent = (score / maxScore) * 100;
+const gradeCalculator = function(score, maxScore) {
+  const percent = (score / maxScore) * 100;
   let grade = '';
 
   if (percent >= 90) {
@@ -18,6 +18,6 @@ let gradeCalculator = function(score, maxScore) {
   return `You got a ${grade} (${percent}%)`;
 };
 
-let myGrade = gradeCalculator(10, 20);
+const myGrade = gradeCalculator(10, 20);
 
 console.log(myGrade);
