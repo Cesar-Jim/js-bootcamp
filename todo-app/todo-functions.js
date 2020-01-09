@@ -14,6 +14,28 @@ const saveTodos = function(todos) {
   localStorage.setItem('todos', JSON.stringify(todos));
 };
 
+// Remove todo by id
+const removeTodo = function(id) {
+  const todoIndex = todos.findIndex(function(todo) {
+    return todo.id === id;
+  });
+
+  if (todoIndex > -1) {
+    todos.splice(todoIndex, 1);
+  }
+};
+
+// Toggle todo completion by id
+const toggleTodo = function(id) {
+  const todo = todos.find(function(todo) {
+    return todo.id === id;
+  });
+
+  if (todo !== undefined) {
+    todo.completed = !todo.completed;
+  }
+};
+
 // Render application todos based on filters
 const renderTodos = function(todos, filters) {
   const filteredTodos = todos.filter(function(todo) {
@@ -41,9 +63,35 @@ const renderTodos = function(todos, filters) {
 
 // Get the DOM elements for an individual note
 const generateTodoDOM = function(todo) {
-  const p = document.createElement('p');
-  p.textContent = todo.text;
-  return p;
+  const todoEl = document.createElement('div');
+  const checkboxEl = document.createElement('input');
+  const todoText = document.createElement('span');
+  const removeButton = document.createElement('button');
+
+  // Setup todo checkbox
+  checkboxEl.setAttribute('type', 'checkbox');
+  checkboxEl.checked = todo.completed;
+  todoEl.appendChild(checkboxEl);
+  checkboxEl.addEventListener('change', function() {
+    toggleTodo(todo.id);
+    saveTodos(todos);
+    renderTodos(todos, filters);
+  });
+
+  // Setup todo text
+  todoText.textContent = todo.text;
+  todoEl.appendChild(todoText);
+
+  // Setup remove button
+  removeButton.textContent = 'x';
+  todoEl.appendChild(removeButton);
+  removeButton.addEventListener('click', function() {
+    removeTodo(todo.id);
+    saveTodos(todos);
+    renderTodos(todos, filters);
+  });
+
+  return todoEl;
 };
 
 // Get the DOM elements for list summary
