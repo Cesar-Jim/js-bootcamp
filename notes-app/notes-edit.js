@@ -1,20 +1,20 @@
+'use strict';
+
 const titleElement = document.querySelector('#note-title');
 const bodyElement = document.querySelector('#note-body');
 const removeElement = document.querySelector('#remove-note');
 const dateElement = document.querySelector('#last-edited');
 const noteId = location.hash.substring(1);
 let notes = getSavedNotes();
-let note = notes.find(function(note) {
-  return note.id === noteId;
-});
+let note = notes.find(note => note.id === noteId);
 
-if (note === undefined) {
+if (!note) {
   location.assign('/index.html');
 }
 
 // Managing the title
 titleElement.value = note.title;
-titleElement.addEventListener('input', function(e) {
+titleElement.addEventListener('input', e => {
   note.title = e.target.value;
   note.updatedAt = moment().valueOf();
   dateElement.textContent = generateLastEdited(note.updatedAt);
@@ -23,7 +23,7 @@ titleElement.addEventListener('input', function(e) {
 
 // Managing the body
 bodyElement.value = note.body;
-bodyElement.addEventListener('input', function(e) {
+bodyElement.addEventListener('input', e => {
   note.body = e.target.value;
   note.updatedAt = moment().valueOf();
   dateElement.textContent = generateLastEdited(note.updatedAt);
@@ -34,22 +34,20 @@ bodyElement.addEventListener('input', function(e) {
 dateElement.textContent = generateLastEdited(note.updatedAt);
 
 // Remove current note
-removeElement.addEventListener('click', function() {
+removeElement.addEventListener('click', () => {
   removeNote(note.id);
   saveNotes(notes);
   location.assign('/index.html');
 });
 
 // Attach events to window
-window.addEventListener('storage', function(e) {
+window.addEventListener('storage', e => {
   if (e.key === 'notes') {
     notes = JSON.parse(e.newValue);
 
-    note = notes.find(function(note) {
-      return note.id === noteId;
-    });
+    note = notes.find(note => note.id === noteId);
 
-    if (note === undefined) {
+    if (!note) {
       this.location.assign('/index.html');
     }
 

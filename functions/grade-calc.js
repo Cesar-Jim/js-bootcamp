@@ -1,5 +1,9 @@
 // ************************************************************ GRADE CALCULATOR CHALLENGE
 const gradeCalculator = function(score, maxScore) {
+  if (typeof score !== 'number' || typeof maxScore !== 'number') {
+    throw Error('Please provide numbers only.');
+  }
+
   const percent = (score / maxScore) * 100;
   let grade = '';
 
@@ -18,6 +22,9 @@ const gradeCalculator = function(score, maxScore) {
   return `You got a ${grade} (${percent}%)`;
 };
 
-const myGrade = gradeCalculator(10, 20);
-
-console.log(myGrade);
+try {
+  const myGrade = gradeCalculator(9, 12);
+  console.log(myGrade);
+} catch (e) {
+  console.log(e.message);
+}
