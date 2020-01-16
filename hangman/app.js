@@ -25,30 +25,96 @@
 // Hangman usage
 const puzzleEl = document.querySelector('#puzzle');
 const guessesEl = document.querySelector('#guesses');
-const game1 = new Hangman('Car Parts', 2);
-
-puzzleEl.textContent = game1.puzzle;
-guessesEl.textContent = game1.statusMessage;
+let game1;
 
 window.addEventListener('keypress', e => {
   const guess = String.fromCharCode(e.charCode);
   game1.makeGuess(guess);
+  render();
+});
+
+const render = () => {
   puzzleEl.textContent = game1.puzzle;
   guessesEl.textContent = game1.statusMessage;
-});
+};
 
-getPuzzle('3', (error, puzzle) => {
-  if (error) {
-    console.log(`Error: ${error}`);
-  } else {
-    console.log(puzzle);
-  }
-});
+const startGame = async () => {
+  const puzzle = await getPuzzle('2');
+  game1 = new Hangman(puzzle, 5);
+  render();
+};
 
-getCountry('BR', (error, country) => {
-  if (error) {
-    console.log(`Error: ${error}`);
-  } else {
-    console.log(`Country name is ${country.name}`);
-  }
-});
+document.querySelector('#reset').addEventListener('click', startGame);
+
+startGame();
+
+// getPuzzle('2')
+//   .then(puzzle => {
+//     console.log(puzzle);
+//   })
+//   .catch(err => {
+//     console.log(`Error: ${err}`);
+//   });
+
+// // *************************************************** FETCH
+// getCountry('PL')
+//   .then(country => {
+//     console.log(country.name);
+//   })
+//   .catch(err => {
+//     console.log(`Error: ${err}`);
+//   });
+
+// getCurrentCountry()
+//   .then(country => {
+//     console.log(country.name);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+
+// // ************************************************* CHALLENGE
+// getLocation()
+//   .then(location => {
+//     console.log(
+//       `You are currently in: ${location.city}, ${location.region} (${location.country})`,
+//     );
+//   })
+//   .catch(err => {
+//     console.log(`Error: ${err}`);
+//   });
+
+// // ************************************************* CHALLENGE2
+// getLocation()
+//   .then(location => {
+//     return getCountry(location.country);
+//   })
+//   .then(data => {
+//     console.log(data.name);
+//   });
+
+// *************************************************** USING PROMISES "MANUALLY"
+// getCountry('MX').then(
+//   country => {
+//     console.log(country.name);
+//   },
+//   err => {
+//     console.log(`Error : ${err}`);
+//   },
+// );
+
+// *************************************************** USING FETCH WITH ALL THE DETAILS
+// fetch('http://puzzle.mead.io/puzzle', {})
+//   .then(response => {
+//     if (response.status === 200) {
+//       return response.json();
+//     } else {
+//       throw new Error('Unable to fetch the puzzle');
+//     }
+//   })
+//   .then(data => {
+//     console.log(data.puzzle);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
