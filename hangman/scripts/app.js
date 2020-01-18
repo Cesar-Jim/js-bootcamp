@@ -34,8 +34,20 @@ window.addEventListener('keypress', e => {
 });
 
 const render = () => {
-  puzzleEl.textContent = game1.puzzle;
+  // My solution:
+  // let word = game1.puzzle;
+  // let newWord = '';
+  // word = word.split('');
+  // word = word.forEach(letter => (newWord += `<span>${letter}</span>`));
+
+  puzzleEl.innerHTML = '';
   guessesEl.textContent = game1.statusMessage;
+
+  game1.puzzle.split('').forEach(letter => {
+    const letterEl = document.createElement('span');
+    letterEl.textContent = letter;
+    puzzleEl.appendChild(letterEl);
+  });
 };
 
 const startGame = async () => {
