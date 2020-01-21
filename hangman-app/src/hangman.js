@@ -54,7 +54,7 @@ class Hangman {
     }
 
     if (isUnique) {
-      this.guessedLetters.push(guess);
+      this.guessedLetters = [...this.guessedLetters, guess];
     }
 
     if (isUnique && isBadGuess) {
@@ -65,6 +65,8 @@ class Hangman {
     this.calculateStatus();
   }
 }
+
+export { Hangman as default };
 
 // ************************************************************** Game definition using "old" syntax (not class)
 // const Hangman = function(word, remainingGuesses) {

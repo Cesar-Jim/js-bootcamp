@@ -1,47 +1,18 @@
-'use strict';
+import { getFilters } from './filters';
+import { getTodos, toggleTodo, removeTodo } from './todos';
 
-// Fetch existing todos from localStorage
-const getSavedTodos = () => {
-  const todosJSON = localStorage.getItem('todos');
-
-  try {
-    return todosJSON ? JSON.parse(todosJSON) : [];
-  } catch (e) {
-    return [];
-  }
-};
-
-// Save todos to localStorage
-const saveTodos = todos => {
-  localStorage.setItem('todos', JSON.stringify(todos));
-};
-
-// Remove todo by id
-const removeTodo = id => {
-  const todoIndex = todos.findIndex(todo => todo.id === id);
-
-  if (todoIndex > -1) {
-    todos.splice(todoIndex, 1);
-  }
-};
-
-// Toggle todo completion by id
-const toggleTodo = id => {
-  const todo = todos.find(todo => todo.id === id);
-
-  if (todo) {
-    todo.completed = !todo.completed;
-  }
-};
-
-// Render application todos based on filters
-const renderTodos = (todos, filters) => {
+// renderTodos
+// Arguments: none
+// Return value: none
+const renderTodos = () => {
   const todoEl = document.querySelector('#todos');
-  const filteredTodos = todos.filter(todo => {
+  const { searchText, hideCompleted } = getFilters();
+
+  const filteredTodos = getTodos().filter(todo => {
     const searchTextMatch = todo.text
       .toLowerCase()
-      .includes(filters.searchText.toLowerCase());
-    const hideCompletedMatch = !filters.hideCompleted || !todo.completed;
+      .includes(searchText.toLowerCase());
+    const hideCompletedMatch = !hideCompleted || !todo.completed;
 
     return searchTextMatch && hideCompletedMatch;
   });
@@ -64,7 +35,9 @@ const renderTodos = (todos, filters) => {
   }
 };
 
-// Get the DOM elements for an individual note
+// generateTodoDOM
+// Arguments: todo
+// Return value: the todo element
 const generateTodoDOM = todo => {
   const todoEl = document.createElement('label');
   const containerEl = document.createElement('div');
@@ -78,8 +51,7 @@ const generateTodoDOM = todo => {
   containerEl.appendChild(checkboxEl);
   checkboxEl.addEventListener('change', () => {
     toggleTodo(todo.id);
-    saveTodos(todos);
-    renderTodos(todos, filters);
+    renderTodos();
   });
 
   // Setup todo text
@@ -97,18 +69,23 @@ const generateTodoDOM = todo => {
   todoEl.appendChild(removeButton);
   removeButton.addEventListener('click', () => {
     removeTodo(todo.id);
-    saveTodos(todos);
-    renderTodos(todos, filters);
+    renderTodos();
   });
 
   return todoEl;
 };
 
-// Get the DOM elements for list summary
+// generateSummaryDOM
+// Arguments: incompletedTodos
+// Return value: the summary element
 const generateSummaryDOM = incompleteTodos => {
   const summary = document.createElement('h2');
   const plural = incompleteTodos.length === 1 ? '' : 's';
+
   summary.classList.add('list-title');
   summary.textContent = `You have ${incompleteTodos.length} todo${plural} left`;
   return summary;
 };
+
+// Make sure to set up the exports
+export { generateTodoDOM, renderTodos, generateSummaryDOM };
